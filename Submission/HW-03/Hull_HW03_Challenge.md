@@ -1,5 +1,6 @@
 ## Quinn Hull
 ## The Challenge 3
+**@Ty Thanks for letting me step out yesterday. Sorry to miss some of the discussion**
 
 ## The Figures
 1. *Figure 1: Base case boundary fluxes.*
@@ -27,6 +28,9 @@
 > * See Figure 2 for right / left boundary profile and a 1-D slice through the center of the model domain. This 'center' or 'middle' slice tells a very different story of Q, in that it has the highest magnitude around the low-K inclusion, and (precipitously) the smallest magnitude within the low-K inclusion.
 > * In comparing this to the 'L' and 'R' boundary observations, we observe that the lowest 'Q' at the boundaries corresponds with the 'Y' location of the low-K inclusion. This fits our conceptual model of flow 'slowing down' through the low-K inclusion. Of course, the drop is much larger in the inclusion itself.
 > * It's really interesting that flow in the middle slice is greatest just at the boundaries of the low-K inclusion. I feel like this is something akin to putting a larger boulder in a river. When the river water encounters the boulder, it obviously cannot flow through it and so it is shunted to the sides. Given that the river channel geometry doesn't change, the only way to 'accommodate' this redirection of flow is for the discharge itself at these locations around the boulder to increase. Once the flow has passed the boulder, it then flows fast to fill the space behind it. Here the low-K inclusion is our boulder, and the groundwater flow is our river.
+
+**NEW THOUGHTS AFTER CLASS DISCUSSION**
+> * The slight 'bump' in Q through the middle of the low-K inclusion is probably a function of flowpaths becoming 1-D through the very center of the inclusion. I.E. nearly all flow lines are 2-D in this situation, where flow is diverging away from the low-K intrusion, but there is one flow path which goes totally 1-D right on through it. It is there that the apparent 'Q' will be maximized within the inclusion at least?
 
 3. Calculate the total flow into (and out of) the domain. Use this to calculate the Keq of the heterogeneous system with the K values as given in the starter code. Repeat this calculation for the following K values for the inclusion (keeping the background K as it is given): 0.01, 0.1, 1, 10, 100. Compare the Keq to the harmonic and arithmetic mean K values based on the area occupied by each medium (rather than the length for a 1D system). Can you draw any general conclusions about the impact of high or low K heterogeneities on the equivalent K for the flow system examined?
 > * See Figure 3 and 4 for relationship between K_eq, K_arithmetic, and K_geometric. Both volumetric Flow (big Q) and 1-D flux (little q) increas monotonically with increasing hydraulic conductivity in the inclusion.
