@@ -1,0 +1,1 @@
+Nice work, Quinn - 95%!  Everything was excellent ... but, I'd like you to think a LITTLE MORE about the last question.  I am trying to get you to see that you can pose hypotheses and then test them directly with a model.  But, you may still be misinterpreting what I mean when I ask if the equipotential distribution depends on the absolute or relative K contrast?
