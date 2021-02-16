@@ -39,6 +39,9 @@
     * Claim: For steady state confined flow,  `f(x) = q = k(b) * dH/dx` where `k(b)` is a constant. For steady state unconfined flow, `k(b)` is a constantly changing along the flow path.
     * Question: I don't think this formulation capture quite accurately the physics of this question. This explanation doesn't quite make sense in terms of a multi-cell-thick domain.
 
+    * **Additional (post lecture) Comments**
+      * In class today we discussed the concept of 'non-linearity' as follows: 'the process in the system depends on the state of the system'. This was really helpful to me. In unconfined flow, the hydraulic gradient is 'non-linear' not merely because the hydraulic gradient is not constant, but because it is a function of the hydraulic gradient at neighboring locations. Thus, we must know what's going on in the neighborhood around the cell in order to know what's going on in the cell itself, and this is a computationally more intensive problem to solve! Am I getting that right?
+      * @Ty I think the 'question' is really: How can I transfer what I understand about how the 1 cell deep model approximates `T` (i.e. by diminishing `K` with respect to `b`) to how unconfined aquifers behave in a real life aquifer? Is this 'mathematical' interpretation also sufficient to explain the physics of flow in unconsolidated aquifers. I'm still not 100%
 
 2. Now add recharge at a constant rate of 1e-4 m/day over the entire top boundary.  Explain the head transect and boundary flows.  Is flow in this system 2D or 3D?  Is it represented as 2D or 3D?  Explain what you mean by your answers.
 
@@ -46,6 +49,10 @@
     * **Figure 2.1** shows that when a constant recharge rate is applied over the entire top boundary, it creates a concave down function terminating at the boundary conditions. It's interesting to note that the highest head in this regime is no longer the left boundary, but instead a vertical line extending through x ~ 800 where the hydraulic head is highest. This functions as a kind of groundwater divide in which flow to the left of this line flows towards the left boundary, and flow towards the right flows towards the right boundary.
     * Claim: The model represents flow in three dimensions (x, y and z). But there cannot be vertical flow because the domain thickness is just 1 cell. This means that flow in the system by definition can only be 1D or 2D. However, if we interrogate the head contours in plan view, we find them to be parallel and hence flow direction can be expressed only in terms of 1 dimension - distance along the x axis. So I would say **flow here is 1 Dimensional, while the model is 3 Dimensional.**
     * Question: What is *exactly* is meant by the binary between flow 'in the system' and flow 'represented' in this question?
+
+    * **Additional (post lecture) Comments**
+      * In our discussion about dimensionality, it came out that in this problem flow in the model is 2D. For the next one (with recharge concentrated in one location) it would be 3D
+      * Also, the conversation about non-linearity really helped me to understand why the GW divide in the recharge situation is biased to the left instead of being in the middle. This is in part due to the fact that the unconfined zone conveys more recharge than the confined portion, and that this process is accelerating as we go downgradient (towards the right boundary).
 
 
 3. Now model a system with zero recharge except for a farm located in [6:10, 6:10] - in python terms.  Recharge beneath the farm is 1e-4 m/day due to excess irrigation.  First, calculate the annual excess irrigation, in meters, that has been applied to the farm.  Second, assuming that the crop is cotton, it is located in southern Arizona, and cotton is grown all year (for simplicity), calculate the total irrigation rate on the farm that would be associated with this amount of excess irrigation.  Finally, identify the area within the domain that might be subject to contamination if the recharge water was somehow tainted.
@@ -55,12 +62,28 @@
     * Fact: Excess Irrigation Rate = Recharge Rate
     * Claim: Annual Excess Irrigation = `recharge [m/day] x num cells [unitless] x area [m^2] x annaul period [day/yr]` = 0.0001 x 16 x 100^2 x 365 = **5840 [m^3]**
     * Claim: As per a ***heated*** discussion about the way to think about the total irrigation rate, this question requires thinking critically about what the recharge rate means. I interpret `total irrigation rate = recharge [excess] rate + cotton consumptive use rate`.
-    * Research: I consulted an old consumptive use graph of cotton available here (https://cals.arizona.edu/crops/irrigation/consumuse/cottoncu.gif) to make my estimates. <img src="assets/HW_05-399ef607.png" width="340" />
+    * Research: I consulted an old consumptive use graph of cotton available here (https://cals.arizona.edu/crops/irrigation/consumuse/cottoncu.gif) to make my estimates.
+
+    <img src="assets/HW_05-399ef607.png" width="340" />
+
     * Claim 1: I found after summing over all months that the annual consumptive use rate of cotton is actually **0.07 m/d** concentrated into the growing season between April and May (`np.array([0.15, 0.33, 0.68, 1.28, 1.95, 3.30, 4.65, 5.84, 5.70, 5.60, 4.35, 3.30, 2.25, 1.25, 0.57]).mean()/12/3.28`).
     * Claim 2: Using this logic `total irrigation rate ~ cotton consumptive use rate ~ 0.07 m/day` and recharge (`0.0001 m/d`) is basically a rounding error.
 
 
+  * **Additional (post lecture) Comments**
+    * I was kind of bummed we didn't talk more about agriculture!
+    * The below is a graph of flows where 300<y<1500 at numerous x slices. It shows that Q is depressed within and to the left of the recharge area, and that q is higher to the right of the recharge area (except near the pumping well.)
+
+    <img src="assets/Hull_Correct_Figures_HW_05-90bc731a.png" width="340" />
+    
+    * To solve the question about concentration, we need to know `Qout = 8`, `Qin1` = agriculture recharge, and `Qin2` = left boundary recharge. `Qout = Qin1 + Qin2`, and I personally think it is easier to solve for `Qin2` using figure **4.1**. The capture zone originates between `y = 15:16`. NB we know that the axis is reversed, and so actually we are interesed in `y = (25-15):(25-16) = (9:10)`. Total recharge into the system from this end equals...
+    * **Qin2** = `print(flux_vals[9:11,0].sum()) = 6.3`
+    * So, by inference, **Qin1** (ag recharge) = `8 - 6.3 = 1.7` (note that I could check this by multiplying the recharge rate by my assumed portion of agricultural area in the capture area)
+    * So about **20%** of water pumped by the well will come from *agricultural recharge*, and **80%** from the *right boundary*. In a well-mixed, fully conserved chemical system, that means the max concentration at the well `C = 0.2*Co`, where `Co` is the concentration of the contaminant in the ag recharge.
+
+
+
 4. Lastly, start the well pumping at a rate of 8 m3/day.  Using one color, identify the capture zone of the well.  Using a second color, show the area that might be contaminated by the irrigated farm fields.  Comment on the impact of the well on the pattern of potential contamination.  
- 
+
   * Results: See Figure 4.1
   * Comments: **Figure 4.1** really shows us that the capture zone of the well includes the area irrigation-driven recharge zone. This means that any water pumped out of the well will inevitably be drawn from this irrigation zone. This is potentially an issue for users if this irrigated water is contaminated with pesticides or nutrients.
