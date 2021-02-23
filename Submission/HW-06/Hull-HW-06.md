@@ -70,7 +70,50 @@
 >   * `Qpump = 20 m^3/d`
 >   * `QET` seems tricky to capture (by itself). But for the sake of argument we use two appraoches. The first is to calculate it indirectly as an unknown(using the mass balance); the second is to calculate it using a mask in python.
 >     1. `Qrecharge + Qboundary = Qpump + QET`; `20 + 60 = 20 + QET`, so `QET ~ 40 m^3/day`
->     2. `(et_mask*et_out).sum()` -> `QET ~ 45 m^3/day`
+>     2. `(et_mask*et_out).sum()` -> `QET ~ 45 m^3/day
+
 <img src="assets/5.4.3.png" width="400" />
 
 > It's pretty cool that we get similar numbers for ET from both approaches
+
+**Followup on Discussion After Class**
+*We discussed two ways to think about mass balance.*
+> **1.** The first being `Qpump = Qrecharge + Qboundary - QET` within the capture zone. Just to build on this, we can calculate a mass balance of solute by adding concentration to the `C_out*Qpump = C_1*Qrecharge + C_0*Qboundary - C_0*QET`, where `C_1 = 1`, `C_0 = 0`. Substituting in we find `C_out = C_1*Qrecharge/Qpump` which is interesting because `Q_ET` is not a factor in determining the concentration of the contaminant at the well. We find that (implicitly) `Q_boundary` is a function of `Q_ET`. I.e., for a given pumping rate, as `Q_ET` goes up, so must `Q_boundary`. But recharge rate stays constant because due to the assumption of an unmoving capture zone; this may be unrealistic.
+
+        ET = 1e-5
+        boundary flux is 26.315542
+        recharge rate is 20.0
+        et rate is -10.001978732645512
+
+        ET = 5e-5
+        boundary flux is 61.75909
+        recharge rate is 20.0
+        et rate is -46.606462229043245
+
+        ET = 1e-4
+        boundary flux is 94.893005
+        recharge rate is 20.0
+        et rate is -83.76503235846758
+
+
+  > **Question @Ty:** Looking at this equation again, I'm still not totally clear on how we got to the discussion that `Q_ET` affects `C_out` because even the relationship between `Q_boundary` and `Q_ET` doesn't seem relevant given that `C_0 = 0`
+
+> **2.** We also discussed an alternative method for calculating 'capture', ie `Q_well = DEL_Q_recharge + DEL_Q_boundary - DEL_Q_ET` where `DEL` is the change in flow `Q` before and after pumping for the entire domain.
+
+**Figure 5.4.4** *Boundary flows before and after pumping, `DEL_Q_boundary` is the integral between the the lines at each boundary for both conditions (shown in green)*
+
+<img src="assets/5.4.4.png" width="400" />
+
+**Figure 5.4.5** *Evapo-transpiration before and after pumping, `DEL_Q_ET` is the difference between ET throughout the domain at both conditions. Notably, centered around the well*
+
+<img src="assets/5.4.5.png" width="400" />
+
+  > The code below and the results thereof show that we can calculate very precisely that losses due to well pumping (~20) by considering `DEL_Q_Boundary` and `DEL_Q_ET`. Note that there is no change in recharge rate as it is not related to pumping in any way.
+
+            >>> print('DEL_Q_Boundary is', abs(leftflux - leftflux_noflow).sum() + abs(rightflux - rightflux_noflow).sum())
+            >>> print('DEL_Q_ET is', -(et_out_noflow-et_out).sum())
+            >>> print('DEL_Q_recharge is', 0)
+
+            DEL_Q_Boundary is 10.995928
+            DEL_Q_ET is 9.004038
+            DEL_Q_recharge is 0
