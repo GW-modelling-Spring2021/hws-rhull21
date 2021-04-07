@@ -2,20 +2,21 @@
 * Week of 04/05/2021
 * River of Dreams   
 
-### Questions
-1. I'm a little confused about the usage of 'f' and 'm' in comments, it seems like maybe this referes to the units of length, where f = feet. But this is probably a typo...
-  - Jill - 'It also confused me that there was a mix of meters and feet when defining the STR object.  I just chose to ignore it and pass it off to messy comment housekeeping and assumed all meters.'
+### Correct Key Figures
 
+**Plan View Map**
 
-2. Given that the boundaries exist at the left and right sides, I don't really understand how this river originates and terminates at the north and south (so to speak)
-  - Jill - 'I also struggle to conceptualize this.  Might not be the realest life representation maybe but more of an exercise of component interactions?   Maybe a good topic of discussion for Tuesday!'
-  - Quinn Followup - We can actually change whether or not there is flow at the origin, which is kind of like a defined flux boundary (in a way)
+<img src="assets/Hull_HW_09-37c95e6f.png" width="400" />
 
-3. I'm not sure about how to interpret the final part of the rivers (3). It seems like there is no flow in the river, and yet the head in the cell is technically above streambed bottom. This could be a conceptual issue in my understanding of the problem. Or it could be that the model doesn't fully capture the dynamics of flow in a stream. Which is it?
-  - Jill - 'also a great conceptual question that i didn't even consider until you mentioned it!    So the streambed bottom is at 7m, but then there is the 1m of sediment (assuming units) so the bottom of the open channel is at 8m, wonder if that could that be a factor somehow??   But then this brings up another conceptual question for me too thinking along these lines - the initial code user inputs for STR object definition sets the "stage_above_datum" as 9 m3/day (top of streambed is at 8m).   What is that doing for us?'
-  - Quinn Followup - @Ty it would be really great to talk about this and break it down
+**Plots of Flows and Heads**
 
-### Model Characteristics
+<img src="assets/Hull_HW_09-9cb5dd7a.png" width="600" />
+
+**Head Distribution**
+
+<img src="assets/Hull_HW_09-ae2d444a.png" width="400" />
+
+### Baseline model characteristics
 * Single Layer Model, 51x51x1 (each cell 10x10x10 m)
 * Stream runs along center of domain (@ Col ~ 25)
   * K changes within three zones along the stream
@@ -84,7 +85,8 @@
     1. The total flow in the river peaks at a smaller amount than the multiple-K condition. This is probably because it is harder for water to get into the river from the groundwater system
     2. The river flows to its terminus. This is probably because the low-K condition prevents water flow leaving the river and leaking into the groundwater system.
 
-<img src="assets/Hull_HW_09-9644abfb.png" width="400" />
+  **Head and flow at river for K = 1/100 of streambed**
+  <img src="assets/Hull_HW_09-9644abfb.png" width="400" /> <img src="assets/Hull_HW_09-8a7eedfe.png" width="200" />
 
 2. How does turning the streambed conductivity to 1 affect streamflow?
   * In general, increasing K to 1 does not change the shape of the curve.
@@ -93,31 +95,27 @@
     2. The head stays constant at 8 throughout the river.
   * Another thought: no matter how we change 'K', the divide at row ~12 seems to be there.
 
-
+  **Head and flow at river for K = 1 of streambed**
   <img src="assets/Hull_HW_09-fef64316.png" width="400" />
-  <img src="assets/Hull_HW_09-d7d6ddfd.png" width="400" />
+  <img src="assets/Hull_HW_09-d7d6ddfd.png" width="200" />
 
 
 3. How does changing the the recharge zone (increasing its size) affect the flow in the river and the shape of the contour distribution?
 
   * Given the condition of streambed K = 1: After testing a recharge zone up to row 36, 46, and 56, we can see that it has NO affect on the contour distribution in the domain. The flow in the river is somewhat larger with distance downstream
   * Given the initial streambed condition (variable): The size of the recharge zone doesn't fundamentally alter the head distribution in the domain too much, but if we increase the size of the domain enough, it does provide just enough of a boost to keep the stream flowing to its terminus.
-  * Jill had some good comments to show my work here, but unfortunately it is lost to the ether - will update if necessary.
-  * The below figure shows the affect of increasing the size of the recharge domain, but I kind of forgot to what size. This is for the initial (variable) condition. I have added this comment because of Jill's excellent comments!
 
-  <img src="assets/Hull_HW_09-7c8d7547.png" width="400" />
+  **Head for different recharge conditions (specified in title)**
+  <img src="assets/Hull_HW_09-7702f416.png" width="200" /> <img src="assets/Hull_HW_09-92a79662.png" width="200" /> <img src="assets/Hull_HW_09-5c12a56e.png" width="200" />
 
 
-### Correct Key Figures
+4. How does changing the boundary condition affect the flow in the river and shape of the bontour distribution?
+  * The below figures show quite clearly that the right boundary condition is the driving force in determine the characteristic of the central stream. A right boundary with a shallow gradient (condition 1, below) will 'give' more water to the riveer along its reach. A right boundary with a steep gradient (condition 2, below) will 'take' more water from the river along its reach.
 
-**Plan View Map**
+  **Head and Flow for right boundary condition 1 -> `np.linspace(10,8,51)`**
 
-<img src="assets/Hull_HW_09-37c95e6f.png" width="400" />
+  <img src="assets/Hull_HW_09-4f85c73b.png" width="200" /> <img src="assets/Hull_HW_09-9bd4da23.png" width="200" />
 
-**Plots of Flows and Heads**
+  **Head and Flow for right boundary condition 2 -> `np.linspace(10,1,51)`**
 
-<img src="assets/Hull_HW_09-9cb5dd7a.png" width="600" />
-
-**Head Distribution**
-
-<img src="assets/Hull_HW_09-ae2d444a.png" width="400" />
+  <img src="assets/Hull_HW_09-973324e6.png" width="200" /> <img src="assets/Hull_HW_09-f8efd3af.png" width="200" />
